@@ -1,4 +1,4 @@
-package com.alfastack.sampleapp.controler
+package com.alfastack.sampleapp.threads
 
 import android.os.Looper
 import android.widget.TextView
