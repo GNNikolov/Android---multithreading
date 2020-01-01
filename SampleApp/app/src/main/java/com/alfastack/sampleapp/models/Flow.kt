@@ -6,7 +6,7 @@ import java.util.*
 /**
  * Created by Joro on 31/12/2019
  */
-class Flow() : Any() {
+class Flow {
     var employees: MutableList<Employee> = ArrayList()
     var response: JSONArray? = null
 }

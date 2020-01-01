@@ -1,34 +1,32 @@
 package com.alfastack.sampleapp
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import com.alfastack.sampleapp.threads.DataFetcher
-import com.alfastack.sampleapp.threads.JsonDecoder
-import com.alfastack.sampleapp.models.Flow
-
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.alfastack.sampleapp.threads.ThreadManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var threadManager: ThreadManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        threadManager = ThreadManager()
+        threadManager.setOnDataProcessedCallback {
+            findViewById<TextView>(R.id.info).text = it.toString()
         }
-        val lock = Object()
-        val flow = Flow()
-        val thread1 = Thread(DataFetcher(findViewById(R.id.info), flow, lock))
-        val thread2 = Thread(JsonDecoder(flow, lock))
-        thread1.start()
-        thread2.start()
+        fab.setOnClickListener { view ->
+            threadManager.run()
+        }
+    }
 
+    override fun onDestroy() {
+        threadManager.shutDown()
+        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

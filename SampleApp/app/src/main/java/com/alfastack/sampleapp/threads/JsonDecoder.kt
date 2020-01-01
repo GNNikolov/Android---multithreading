@@ -1,20 +1,18 @@
 package com.alfastack.sampleapp.threads
 
-import android.util.Log
 import com.alfastack.sampleapp.models.Employee
 import com.alfastack.sampleapp.models.Flow
 
 /**
  * Created by Joro on 31/12/2019
  */
-class JsonDecoder(private val flow: Flow, private val mLock: Object) : Runnable {
+internal class JsonDecoder(private val flow: Flow, private val lock: Object) : Runnable {
     override fun run() {
-        synchronized(mLock) {
+        synchronized(lock) {
             while (flow.response == null) {
-                mLock.wait()
+                lock.wait()
             }
             val items = flow.response
-            Log.i("Data", items.toString())
             items?.let {
                 for (i in 0 until items.length()) {
                     val item = items.getJSONObject(i)
@@ -25,7 +23,7 @@ class JsonDecoder(private val flow: Flow, private val mLock: Object) : Runnable 
                     val employee = Employee(id, name, salary, age)
                     flow.employees.add(employee)
                 }
-                mLock.notify()
+                lock.notify()
             }
         }
     }
