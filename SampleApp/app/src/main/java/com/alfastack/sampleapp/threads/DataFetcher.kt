@@ -14,6 +14,7 @@ import javax.net.ssl.HttpsURLConnection
 
 internal class DataFetcher(private val flow: Flow, private val mLock: Object) : Runnable {
     lateinit var onFinishedCallback: (data: List<Employee>) -> Unit
+    lateinit var onPreFetched: () -> Unit
 
     companion object {
         private val api: String = "https://dummy.restapiexample.com/api/v1/employees"
@@ -24,6 +25,9 @@ internal class DataFetcher(private val flow: Flow, private val mLock: Object) : 
 
     override fun run() {
         synchronized(mLock) {
+            handler.post{
+                onPreFetched()
+            }
             val httpsURLConnection = url.openConnection() as HttpsURLConnection
             val allText =
                 httpsURLConnection.inputStream.bufferedReader().use(BufferedReader::readText)

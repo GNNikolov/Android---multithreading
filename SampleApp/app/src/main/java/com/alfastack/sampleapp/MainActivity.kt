@@ -34,6 +34,9 @@ class MainActivity : AppCompatActivity() {
                 list.adapter = EmployeeAdapter(it)
             }
         }
+        threadManager.setOnPreFetchedCallback {
+            message.text = "Loading..."
+        }
         fab.setOnClickListener { view ->
             threadManager.run()
         }

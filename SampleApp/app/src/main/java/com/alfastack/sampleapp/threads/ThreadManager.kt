@@ -24,6 +24,9 @@ class ThreadManager {
     fun setOnDataProcessedCallback(onFinished: (data: List<Employee>) -> Unit) {
         dataFetchRunnable.onFinishedCallback = onFinished
     }
+    fun setOnPreFetchedCallback(onPreFetched: () -> Unit) {
+        dataFetchRunnable.onPreFetched = onPreFetched
+    }
 
     fun run() {
         threadPool.apply {
